@@ -1,38 +1,218 @@
-.App {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f0f4f8;
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  width: 400px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.card-header {
+  background: #042C53;
+  padding: 28px 32px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.card-header h1 {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 4px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.card-header p {
+  color: #85B7EB;
+  font-size: 13px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #f0f4f8;
+}
+
+.tab {
+  flex: 1;
+  padding: 14px;
+  background: white;
+  border: none;
+  font-size: 14px;
+  color: #888;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.tab.active {
+  color: #185FA5;
+  font-weight: bold;
+  border-bottom: 3px solid #185FA5;
+}
+
+.form {
+  padding: 28px 32px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 10px;
+}
+
+label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input, select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #185FA5;
+}
+
+.login-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: opacity 0.2s;
+}
+
+.login-btn:hover { opacity: 0.85; }
+.login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.blue   { background: #185FA5; color: white; }
+.green  { background: #0F6E56; color: white; }
+.purple { background: #534AB7; color: white; }
+
+.error-msg {
+  background: #FCEBEB;
+  color: #A32D2D;
+  border: 1px solid #F09595;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.dashboard {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.dashboard-header {
+  background: #042C53;
   color: white;
+  padding: 24px 32px;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.App-link {
-  color: #61dafb;
+.dashboard-header h1 {
+  font-size: 22px;
+  margin-bottom: 4px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dashboard-header p {
+  color: #85B7EB;
+  font-size: 13px;
+}
+
+.logout-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover { background: rgba(255,255,255,0.25); }
+
+.grades-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+.grades-card h2 {
+  padding: 20px 24px;
+  font-size: 16px;
+  color: #0a2540;
+  border-bottom: 1px solid #f0f4f8;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 12px 24px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  background: #f9f9f9;
+}
+
+td {
+  padding: 14px 24px;
+  font-size: 14px;
+  color: #333;
+  border-top: 1px solid #f0f4f8;
+}
+
+.grade-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: bold;
+  background: #EAF3DE;
+  color: #3B6D11;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #888;
+  font-size: 14px;
 }
