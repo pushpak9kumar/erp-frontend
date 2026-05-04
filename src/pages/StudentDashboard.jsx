@@ -28,16 +28,16 @@ function StudentDashboard() {
         async function fetchGrades() {
             try {
                 const response = await axios.get(
-                    'https://localhost:5000/api/grades/${rollNo}',
+                    `http://localhost:5000/api/grades/${rollNo}`,
                     {
                         headers: {
-                            Authorization: 'Bearer ${tokenn}'
+                            Authorization: `Bearer ${token}`
                         }
                     }
                 );
                 setGrades(response.data.grades);
             } catch (err) {
-                if(err.response && err.message.status === 401) {
+                if(err.response && err.response.status === 401) {
                     //token expired - send back to login
                     localStorage.clear();
                     navigate('/');

@@ -17,42 +17,60 @@ function LoginPage() {
     //useNavigate lets us change pages programmatically
     const navigate = useNavigate();
 
-    async function handleLogin() {
-       setError(''); // clear previous error
+   async function handleLogin() {
+  setError('');
 
-       //validate fields
-       if(!rollNo || !password) {
-        setError('Please fill in all fields.');
-        return;
-       }
+  if (!rollNo || !password) {
+    setError('Please fill in all fields.');
+    return;
+  }
 
-       setLoading(true);
+  setLoading(true);
 
-       try {
-        // calling real backend
-        const response = await axios.post(
-            'https://localhost:5000/api/login',
-            { rollNo, password }
-        );
+  console.log('Attempting login with:', rollNo);  // add this
+  console.log('Sending to:', 'http://localhost:5000/api/login');  // add this
 
-        //save token and name in localStorage
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('name', response.data.name);
-        localStorage.setItem('rollNo', rollNo);
+  try {
+    const response = await axios.post(
+      'http://localhost:5000/api/login',
+       { userId: rollNo, password, role: activeTab }
+    );
 
-        // go to dashboard
-        navigate('/dashboard');
-       } catch(err) {
-        //axios puts server error in err.response.data
-        if(err.response) {
-            setError(err.response.data.error);
-        } else {
-            setError('Cannot connect to server.');
-        }
-       } finally {
-        setLoading(false);
-       }
+    console.log('Response received:', response.data);  // add this
+
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('name',  response.data.name);
+    localStorage.setItem('role',   response.data.role);
+    localStorage.setItem('rollNo', rollNo);
+
+    // redirect based on role
+if (response.data.role === 'student') {
+  navigate('/student/dashboard');
+} else if (response.data.role === 'admin') {
+  navigate('/admin/dashboard');
+} else if (response.data.role === 'director') {
+  navigate('/director/dashboard');
+}
+
+
+  } catch (err) {
+    console.log('Full error:', err);           // add this
+    console.log('Error type:', err.code);      // add this
+    console.log('Error response:', err.response);  // add this
+
+    if (err.response) {
+      setError(err.response.data.error);
+    } else if (err.code === 'ERR_NETWORK') {
+      setError('Cannot connect to server. Is backend running?');
+    } else if (err.code === 'ERR_CONNECTION_REFUSED') {
+      setError('Backend refused connection. Check port 5000.');
+    } else {
+      setError('Cannot connect to server. Error: ' + err.code);
     }
+  } finally {
+    setLoading(false);
+  }
+}
 
     return (
         <div className="page">
