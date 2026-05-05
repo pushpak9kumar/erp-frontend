@@ -33,6 +33,11 @@ function AdminDashboard() {
   const [attLoading, setAttLoading] = useState(false);
   const [attMessage, setAttMessage] = useState('');
 
+  // State for "Broadcast Notice" form
+  const [newNotice, setNewNotice] = useState('');
+  const [noticeLoading, setNoticeLoading] = useState(false);
+  const [noticeMessage, setNoticeMessage] = useState('');
+
   const navigate = useNavigate();
   const name   = localStorage.getItem('name');
   const token  = localStorage.getItem('token');
@@ -117,6 +122,21 @@ function AdminDashboard() {
       setAttMessage(err.response?.data?.error || 'Error marking attendance.');
     } finally {
       setAttLoading(false);
+    }
+  }
+
+  async function handleSendNotice(e) {
+    e.preventDefault();
+    setNoticeLoading(true);
+    setNoticeMessage('');
+    try {
+      await axios.post('http://localhost:5000/api/notices', { message: newNotice }, { headers: { Authorization: `Bearer ${token}` } });
+      setNoticeMessage('Notice broadcasted to all students!');
+      setNewNotice('');
+    } catch (err) {
+      setNoticeMessage(err.response?.data?.error || 'Error broadcasting notice.');
+    } finally {
+      setNoticeLoading(false);
     }
   }
 
@@ -218,6 +238,27 @@ function AdminDashboard() {
             <div>
               <button type="submit" className="login-btn blue" disabled={attLoading}>{attLoading ? 'Saving...' : 'Mark Attendance'}</button>
               {attMessage && <p style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>{attMessage}</p>}
+            </div>
+          </form>
+        </div>
+
+        {/* BROADCAST NOTICE FORM */}
+        <div className="grades-card">
+          <h2>Broadcast Notice</h2>
+          <form className="form" onSubmit={handleSendNotice} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+            <div>
+              <label>Announcement Message</label>
+              <textarea 
+                value={newNotice} 
+                onChange={(e) => setNewNotice(e.target.value)} 
+                required 
+                placeholder="Type your message to all students..."
+                style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', width: '100%', fontSize: '1rem', minHeight: '150px', fontFamily: 'inherit' }}
+              />
+            </div>
+            <div>
+              <button type="submit" className="login-btn" style={{background: '#f44336'}} disabled={noticeLoading}>{noticeLoading ? 'Sending...' : 'Send to All Students'}</button>
+              {noticeMessage && <p style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>{noticeMessage}</p>}
             </div>
           </form>
         </div>

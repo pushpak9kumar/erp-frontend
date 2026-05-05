@@ -65,21 +65,48 @@ function DirectorDashboard() {
         {error && <div className="error-msg" style={{margin:'1rem'}}>{error}</div>}
 
         {!loading && !error && stats && (
-          <table>
-            <thead>
-              <tr>
-                <th>Metric</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Total Enrolled Students</td><td>{stats.totalStudents}</td></tr>
-              <tr><td>Average Institute CGPA</td><td>{stats.averageCgpa}</td></tr>
-              <tr><td>Placement Rate</td><td>{stats.placementRate}%</td></tr>
-              <tr><td>Faculty Count</td><td>{stats.facultyCount}</td></tr>
-              <tr><td>Active Courses</td><td>{stats.activeCourses}</td></tr>
-            </tbody>
-          </table>
+          <>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+              <div style={{ padding: '2rem', background: 'rgba(100, 108, 255, 0.1)', borderRadius: '12px', textAlign: 'center' }}>
+                <h3 style={{ margin: 0, color: '#aaa' }}>Total Students</h3>
+                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#646cff' }}>{stats.totalStudents}</h1>
+              </div>
+              <div style={{ padding: '2rem', background: 'rgba(255, 152, 0, 0.1)', borderRadius: '12px', textAlign: 'center' }}>
+                <h3 style={{ margin: 0, color: '#aaa' }}>Active Courses</h3>
+                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#ff9800' }}>{stats.activeCourses}</h1>
+              </div>
+              <div style={{ padding: '2rem', background: 'rgba(76, 175, 80, 0.1)', borderRadius: '12px', textAlign: 'center' }}>
+                <h3 style={{ margin: 0, color: '#aaa' }}>Avg Institute CGPA</h3>
+                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#4caf50' }}>{stats.averageCgpa}</h1>
+              </div>
+              <div style={{ padding: '2rem', background: 'rgba(156, 39, 176, 0.1)', borderRadius: '12px', textAlign: 'center' }}>
+                <h3 style={{ margin: 0, color: '#aaa' }}>Placement Rate</h3>
+                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#9c27b0' }}>{stats.placementRate}%</h1>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '3rem' }}>
+              <h2>Department Wise Report</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Department</th>
+                    <th>Total Students</th>
+                    <th>Average CGPA</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats.departmentStats && stats.departmentStats.map((dept, index) => (
+                    <tr key={index}>
+                      <td><span className="grade-badge">{dept.department}</span></td>
+                      <td>{dept.student_count}</td>
+                      <td>{parseFloat(dept.avg_cgpa).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

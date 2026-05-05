@@ -6,6 +6,7 @@ import '../App.css';
 function StudentDashboard() {
   const [grades, setGrades] = useState([]);
   const [cgpa, setCgpa] = useState('N/A');
+  const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('academic');
@@ -25,12 +26,18 @@ function StudentDashboard() {
 
     async function fetchAcademicData() {
         try {
-            const response = await axios.get(
+            const gradeResponse = await axios.get(
                 `http://localhost:5000/api/grades/${rollNo}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setGrades(response.data.grades);
-            setCgpa(response.data.cgpa);
+            setGrades(gradeResponse.data.grades);
+            setCgpa(gradeResponse.data.cgpa);
+
+            const noticeResponse = await axios.get(
+                'http://localhost:5000/api/notices',
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setNotices(noticeResponse.data.notices);
         } catch (err) {
             if(err.response && err.response.status === 401) {
                 localStorage.clear();
@@ -64,6 +71,20 @@ function StudentDashboard() {
         </div>
         <button className="logout-btn" onClick={handleLogout}>Logout</button>
       </div>
+
+      {/* NOTICES BANNER */}
+      {notices.length > 0 && (
+        <div className="no-print" style={{ background: '#fff9c4', padding: '1rem 2rem', borderRadius: '12px', color: '#827717', marginBottom: '2rem', borderLeft: '8px solid #ffeb3b' }}>
+          <h3 style={{ margin: '0 0 0.5rem 0' }}>📢 Recent Announcements</h3>
+          <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+            {notices.map(n => (
+              <li key={n.id} style={{ marginBottom: '0.5rem' }}>
+                {n.message} <small style={{ color: '#aaa', marginLeft: '0.5rem' }}>({new Date(n.date).toLocaleDateString()})</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* TABS NAVIGATION */}
       <div className="tabs no-print" style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
