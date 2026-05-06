@@ -46,9 +46,13 @@ function DirectorDashboard() {
     navigate('/');
   }
 
+  function downloadReport() {
+    window.print();
+  }
+
   return (
     <div className="dashboard">
-      <div className="dashboard-header">
+      <div className="dashboard-header no-print">
         <div>
           <h1>Welcome, {name}!</h1>
           <p>Director — Institutional Overview</p>
@@ -59,7 +63,12 @@ function DirectorDashboard() {
       </div>
 
       <div className="grades-card">
-        <h2>Institute Analytics</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h2 style={{ margin: 0 }}>Institute Analytics</h2>
+          <button className="login-btn green no-print" style={{ width: 'auto', padding: '0.5rem 1rem' }} onClick={downloadReport}>
+            Export Report (PDF)
+          </button>
+        </div>
 
         {loading && <div className="loading">Loading analytics...</div>}
         {error && <div className="error-msg" style={{margin:'1rem'}}>{error}</div>}
@@ -80,8 +89,16 @@ function DirectorDashboard() {
                 <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#4caf50' }}>{stats.averageCgpa}</h1>
               </div>
               <div style={{ padding: '2rem', background: 'rgba(156, 39, 176, 0.1)', borderRadius: '12px', textAlign: 'center' }}>
+                <h3 style={{ margin: 0, color: '#aaa' }}>Faculty & Staff</h3>
+                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#9c27b0' }}>{stats.facultyCount}</h1>
+              </div>
+              <div style={{ padding: '2rem', background: 'rgba(3, 169, 244, 0.1)', borderRadius: '12px', textAlign: 'center' }}>
+                <h3 style={{ margin: 0, color: '#aaa' }}>Overall Attendance</h3>
+                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#03a9f4' }}>{stats.attendanceOverview}%</h1>
+              </div>
+              <div style={{ padding: '2rem', background: 'rgba(233, 30, 99, 0.1)', borderRadius: '12px', textAlign: 'center' }}>
                 <h3 style={{ margin: 0, color: '#aaa' }}>Placement Rate</h3>
-                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#9c27b0' }}>{stats.placementRate}%</h1>
+                <h1 style={{ fontSize: '3rem', margin: '0.5rem 0', color: '#e91e63' }}>{stats.placementRate}%</h1>
               </div>
             </div>
 

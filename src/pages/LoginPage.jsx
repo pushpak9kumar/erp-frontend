@@ -14,8 +14,31 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // reset fields
+    const [showReset, setShowReset] = useState(false);
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetMsg, setResetMsg] = useState('');
+
     //useNavigate lets us change pages programmatically
     const navigate = useNavigate();
+
+    async function handleResetPassword() {
+        setError('');
+        setResetMsg('');
+        if (!resetEmail) {
+            setError('Please enter your email.');
+            return;
+        }
+        setLoading(true);
+        try {
+            const response = await axios.post('http://localhost:5000/api/reset-password', { email: resetEmail });
+            setResetMsg(response.data.message);
+        } catch (err) {
+            setError(err.response?.data?.error || 'Failed to send reset link.');
+        } finally {
+            setLoading(false);
+        }
+    }
 
    async function handleLogin() {
   setError('');
@@ -103,31 +126,63 @@ if (response.data.role === 'student') {
         </div>
 
         <div className="form">
-          <label>Roll Number</label>
-          <input
-            type="text"
-            placeholder="e.g. 21EE20212023"
-            value={rollNo}
-            onChange={(e) => setRollNo(e.target.value)}
-          />
+          {showReset ? (
+            <>
+              <h3>Reset Password</h3>
+              <p style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '1rem' }}>Enter your email to receive a mock reset link.</p>
+              <label>Email Address</label>
+              <input
+                type="email"
+                placeholder="e.g. devil@iit.ac.in"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+              />
+              {error && <div className="error-msg">{error}</div>}
+              {resetMsg && <div style={{ color: '#4caf50', marginBottom: '1rem', fontWeight: 'bold' }}>{resetMsg}</div>}
+              
+              <button className="login-btn blue" onClick={handleResetPassword} disabled={loading}>
+                {loading ? 'Sending...' : 'Send Reset Link'}
+              </button>
+              
+              <button className="login-btn" style={{ background: 'transparent', color: '#646cff', border: '1px solid #646cff', marginTop: '1rem' }} onClick={() => { setShowReset(false); setError(''); setResetMsg(''); }}>
+                Back to Login
+              </button>
+            </>
+          ) : (
+            <>
+              <label>{activeTab === 'student' ? 'Roll Number' : 'Staff ID'}</label>
+              <input
+                type="text"
+                placeholder={activeTab === 'student' ? "e.g. 21EE20212023" : "e.g. ADM2024001"}
+                value={rollNo}
+                onChange={(e) => setRollNo(e.target.value)}
+              />
 
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
 
-          {error && <div className="error-msg">{error}</div>}
+              {error && <div className="error-msg">{error}</div>}
 
-          <button
-            className={`login-btn ${activeTab === 'student' ? 'blue' : activeTab === 'admin' ? 'green' : 'purple'}`}
-            onClick={handleLogin}
-            disabled={loading}
-          >
-            {loading ? 'Signing in...' : `Sign in as ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`}
-          </button>
+              <button
+                className={`login-btn ${activeTab === 'student' ? 'blue' : activeTab === 'admin' ? 'green' : 'purple'}`}
+                onClick={handleLogin}
+                disabled={loading}
+              >
+                {loading ? 'Signing in...' : `Sign in as ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`}
+              </button>
+
+              <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <a href="#" onClick={(e) => { e.preventDefault(); setShowReset(true); setError(''); }} style={{ color: '#646cff', textDecoration: 'none', fontSize: '0.9rem' }}>
+                  Forgot Password?
+                </a>
+              </div>
+            </>
+          )}
         </div>
 
       </div>
